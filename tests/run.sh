@@ -23,6 +23,12 @@ assert_contains scripts/make-hybrid-iso.sh '/casper/vmlinuz'
 assert_contains scripts/make-hybrid-iso.sh 'x86_64-efi'
 assert_contains scripts/build.sh 'SOURCE_DATE_EPOCH'
 assert_contains scripts/build.sh './scripts/clean-build.sh'
+assert_contains scripts/test-build.sh '-cpu host'
+assert_contains scripts/test-build.sh '-cpu max,svm=off'
+assert_contains config/package-lists/raven-base.list.chroot 'gnupg'
+assert_contains scripts/build-local-packages.sh 'config/local-packages'
+assert_contains config/hooks/025-install-local-packages.chroot 'dpkg --install'
+assert_contains packages/raven-customization/control 'Replaces: base-files, bash'
 
 duplicates=$(sed '/^[[:space:]]*#/d;/^[[:space:]]*$/d' config/package-lists/*.list.chroot | sort | uniq -d)
 if [ -n "$duplicates" ]; then

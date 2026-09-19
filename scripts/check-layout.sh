@@ -13,7 +13,7 @@ require() {
 }
 
 # Keep the operating system usable without the higher-level AI toolchain.
-for package in linux-generic-hwe-24.04 casper network-manager; do
+for package in linux-generic-hwe-24.04 casper network-manager gnupg; do
     require config/package-lists/raven-base.list.chroot "$package"
     if grep -Fqx "$package" config/package-lists/raven-ai.list.chroot; then
         printf 'error: base package %s leaked into the AI layer\n' "$package" >&2

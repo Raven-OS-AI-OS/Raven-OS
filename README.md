@@ -79,7 +79,7 @@ Raven-OS/
 ├── config/
 │   ├── bootloaders/isolinux/   # Live boot menu and theme
 │   ├── hooks/                  # Build-time compatibility hooks
-│   ├── packages.chroot/        # Generated local packages consumed by live-build
+│   ├── local-packages/         # Generated Raven packages installed by a hook
 │   └── package-lists/          # Ubuntu packages installed in the image
 ├── packages/
 │   └── raven-customization/    # Packaged Raven identity and desktop defaults
@@ -104,6 +104,9 @@ the repository root while building, but are excluded from version control.
 - `sudo` access and an internet connection to Ubuntu package mirrors; and
 - `live-build`, `debootstrap`, `syslinux`/`isolinux` tooling, and `xorriso`.
 
+
+## Development 
+
 On a compatible Ubuntu or Debian-based host, install the core build and test tools:
 
 ```bash
@@ -116,8 +119,7 @@ Clone and build:
 ```bash
 git clone https://github.com/kolithawarnakulasooriya/Raven-OS.git
 cd Raven-OS
-./scripts/build-local-packages.sh
-sudo lb build 2>&1 | tee raven-build.log
+
 ```
 
 Running `auto/config` also refreshes the local customization package before it
@@ -126,11 +128,6 @@ regenerates the `live-build` configuration.
 The configured output is `binary.hybrid.iso`. A full build downloads many packages
 and can take a while depending on the host and mirror speed.
 
-> [!NOTE]
-> The configuration was generated with a legacy `live-build` configuration format.
-> Build-host versions can affect compatibility. If you are changing build settings,
-> edit [`auto/config`](auto/config), run `lb config`, and review the regenerated
-> files before committing them.
 
 ### Recover an interrupted build
 
@@ -158,19 +155,15 @@ and KVM acceleration:
 KVM must be available to your user. UEFI testing also requires OVMF (override
 its path with `OVMF_CODE`). The equivalent BIOS command is:
 
-```bash
-qemu-system-x86_64 -enable-kvm -m 4096 -smp 4 -cdrom binary.hybrid.iso
-```
-
-For a host without KVM, omit `-enable-kvm` (the live system will run more slowly).
-
 The current build is a **live environment only**; the Debian installer is disabled
 in [`auto/config`](auto/config).
 
 ## Customize the image
 
 - Add or remove Ubuntu packages in
-  [`config/package-lists/desktop.list.chroot`](config/package-lists/desktop.list.chroot).
+  [`config/package-lists/raven-desktop.list.chroot`](config/package-lists/raven-desktop.list.chroot).
+- Add or remove AI related packages in
+  [`config/package-lists/raven-ai.list.chroot`](config/package-lists/raven-ai.list.chroot).
 - Add Raven-owned files under
   [`packages/raven-customization/rootfs/`](packages/raven-customization/rootfs/),
   update the package version, and run `./scripts/build-local-packages.sh`.
@@ -181,15 +174,6 @@ in [`auto/config`](auto/config).
 Keep changes reproducible and avoid embedding credentials, private keys, tokens, or
 machine-specific configuration in an image.
 
-### Package layers
-
-Package lists are deliberately ordered by responsibility. `base.list.chroot`
-contains the kernel, live-boot, networking, and recovery foundation;
-`desktop.list.chroot` adds XFCE and applications; and `ai.list.chroot` adds the
-Ubuntu-supported data-science stack. AI dependencies must not move into or replace
-the stable base. This lets the upper layer evolve while the bootable foundation
-continues to receive ordinary Noble security updates.
-
 ## Automated stability checks
 
 Run the fast checks locally before an expensive image build:
@@ -199,14 +183,13 @@ make test
 ```
 
 They validate Ubuntu configuration, package-layer separation, shell syntax,
-reproducible-build controls, and both firmware boot paths. GitHub Actions runs the
+reproducible-build controls, and both firmware boot paths. 
+
+** GitHub Actions **  
 same suite plus ShellCheck for every push and pull request. These checks complement,
 rather than replace, a full ISO build and BIOS/UEFI boot test.
 
-After building, `make verify-iso` programmatically inspects the El Torito catalog
-and asserts that both firmware loaders, the kernel, and the initramfs are present.
-
-### Preserve Ubuntu compatibility
+### Preserve compatibility
 
 The `auto/` and `config/` directories intentionally remain at the repository root:
 `live-build` discovers them there. After reorganizing files or regenerating the
@@ -214,7 +197,7 @@ configuration, run the lightweight compatibility check before starting a full
 image build:
 
 ```bash
-./scripts/check-ubuntu-compatibility.sh
+./scripts/check-compatibility.sh
 ```
 
 The check verifies that both `auto/config` and the generated configuration still

@@ -22,6 +22,17 @@ case "$mode" in
         ;;
 esac
 
-# firmware_args is intentionally split into QEMU arguments.
+# Use the host CPU model with KVM so QEMU does not advertise virtualization
+# extensions from the wrong CPU vendor. Fall back to TCG when /dev/kvm is not
+# available to this user (common inside VMs and containers).
+if [ -r /dev/kvm ] && [ -w /dev/kvm ]; then
+    accelerator_args="-enable-kvm -cpu host"
+else
+    accelerator_args="-accel tcg -cpu max,svm=off"
+    printf 'warning: /dev/kvm is unavailable; using slower software emulation\n' >&2
+fi
+
+# accelerator_args and firmware_args are intentionally split into QEMU arguments.
 # shellcheck disable=SC2086
-qemu-system-x86_64 -enable-kvm -m 4096 -smp 4 $firmware_args -cdrom binary.hybrid.iso
+qemu-system-x86_64 $accelerator_args -m 4096 -smp 4 $firmware_args \
+    -cdrom binary.hybrid.iso
