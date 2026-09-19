@@ -85,7 +85,7 @@ Raven-OS/
 │   └── raven-customization/    # Packaged Raven identity and desktop defaults
 └── scripts/
     ├── build-local-packages.sh # Build Raven-owned Debian packages
-    ├── check-ubuntu-compatibility.sh # Guard Ubuntu-specific live-build settings
+    ├── check-compatibility.sh # Guard Ubuntu-specific live-build settings
     ├── resume-build.sh         # Recovery helper for an interrupted build
     └── test-build.sh           # Launch the generated ISO with QEMU/KVM
 ```

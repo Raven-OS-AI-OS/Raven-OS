@@ -7,7 +7,7 @@ clean:
 	./scripts/clean-build.sh
 
 check:
-	./scripts/check-ubuntu-compatibility.sh
+	./scripts/check-compatibility.sh
 	./scripts/check-layout.sh
 
 test: check
