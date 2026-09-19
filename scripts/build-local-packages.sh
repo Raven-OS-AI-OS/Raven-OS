@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 package_source="$repo_root/packages/raven-customization"
 output_dir="$repo_root/config/local-packages"
 legacy_output_dir="$repo_root/config/packages.chroot"
@@ -21,10 +21,10 @@ package=$(sed -n 's/^Package: //p' "$package_source/control")
 version=$(sed -n 's/^Version: //p' "$package_source/control")
 architecture=$(sed -n 's/^Architecture: //p' "$package_source/control")
 
-[ -n "$package" ] && [ -n "$version" ] && [ -n "$architecture" ] || {
+if [ -z "$package" ] || [ -z "$version" ] || [ -z "$architecture" ]; then
     echo "error: incomplete package metadata in $package_source/control" >&2
     exit 1
-}
+fi
 
 package_root="$temporary_dir/$package"
 mkdir -p "$package_root/DEBIAN" "$output_dir"
