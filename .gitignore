@@ -1,12 +1,24 @@
-*.iso
-*.img
-*.log
-wget-log*
-chroot/
-config/chroot_apt/
-.config/chroot_apt/
-.cache/*
-cache/
-.build/
-.build/*
-binary/
+# live-build state and output
+/.build/
+/.cache/
+/.lock
+/binary/
+/cache/
+/chroot/
+
+# Generated image artifacts and manifests
+/*.img
+/*.iso
+/*.iso.*
+/binary.contents
+/binary.packages
+/chroot.headers
+/chroot.packages.*
+
+# Generated APT configuration
+/config/chroot_apt/
+/.config/chroot_apt/
+
+# Logs and download leftovers
+/*.log
+/wget-log*
