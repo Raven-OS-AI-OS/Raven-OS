@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="raven-logo.png" alt="Raven OS desktop artwork" width="400">
+<img src="assets/branding/raven-logo.png" alt="Raven OS desktop artwork" width="400">
 
 # Raven OS
 
@@ -73,18 +73,21 @@ these areas is your specialty, contributions are especially welcome.
 
 ```text
 Raven-OS/
+├── assets/                     # Project-level artwork and branding
+│   └── branding/               # Logos used by repository documentation
 ├── auto/config                 # Reproducible live-build configuration
 ├── config/
 │   ├── bootloaders/isolinux/   # Live boot menu and theme
 │   ├── hooks/                  # Build-time compatibility and customization hooks
 │   ├── includes.chroot/        # Files copied into the live filesystem
 │   └── package-lists/          # Packages installed in the image
-├── resume-build.sh             # Recovery helper for this repository's build state
-└── test-build.sh               # Launch the generated ISO with QEMU/KVM
+└── scripts/
+    ├── resume-build.sh         # Recovery helper for an interrupted build
+    └── test-build.sh           # Launch the generated ISO with QEMU/KVM
 ```
 
-Generated build directories, logs, package manifests, and ISO artifacts may also be
-present locally after a build.
+Generated build directories, logs, package manifests, and ISO artifacts remain at
+the repository root while building, but are excluded from version control.
 
 ## Build from source
 
@@ -127,7 +130,7 @@ This repository contains a narrowly scoped recovery script for known interrupted
 bootstrap/chroot and Syslinux build states:
 
 ```bash
-./resume-build.sh
+./scripts/resume-build.sh
 ```
 
 Read the script before running it. It uses `sudo`, modifies generated build state,
@@ -140,7 +143,7 @@ The included test script starts the generated ISO with four virtual CPUs, 4 GB R
 and KVM acceleration:
 
 ```bash
-./test-build.sh
+./scripts/test-build.sh
 ```
 
 KVM must be available to your user. The equivalent command is:

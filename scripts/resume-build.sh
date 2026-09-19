@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 # A previous live-build process must not be running while state is repaired.
 if pgrep -f '/usr/lib/live/build/lb_(build|bootstrap|chroot|binary)|[ /]debootstrap ' >/dev/null 2>&1; then
