@@ -1,27 +1,16 @@
-# Ubuntu Noble XFCE live system
+# Desktop and interactive applications layered on the stable base.
 tasksel
-ubuntu-standard
 xfce4
 xfce4-goodies
 lightdm
 lightdm-gtk-greeter
-network-manager
 network-manager-gnome
-pipewire
-wireplumber
 pavucontrol
-casper
-linux-image-generic
-linux-firmware
 firefox
 libreoffice
 vlc
 gparted
 git
-curl
-wget
 vim
 nano
 htop
-sudo
-openssh-client

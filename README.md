@@ -23,9 +23,9 @@ that connect them.
 
 > [!IMPORTANT]
 > Raven OS is in early development. The current image is an **amd64 live system**
-> based on Ubuntu 24.04 LTS (Noble) with XFCE. The AI and robotics developer stack
-> is part of the project roadmap and is not yet bundled in the checked-in package
-> configuration. Do not use the image as a production or safety-critical robotics
+> based on Ubuntu 24.04 LTS (Noble) with XFCE. A small Ubuntu-supported data-science
+> layer is included; broader AI frameworks and the robotics developer stack remain
+> on the roadmap. Do not use the image as a production or safety-critical robotics
 > platform yet.
 
 ## About
@@ -37,8 +37,8 @@ those pieces belong together from the start.
 
 The project currently produces a bootable, compressed ISO-hybrid image using
 [`live-build`](https://manpages.debian.org/live-build). Its foundation is intentionally
-lightweight: Ubuntu Noble packages, the Linux generic kernel, the XFCE desktop, and
-Syslinux/Isolinux boot media.
+lightweight: Ubuntu Noble packages, the Linux generic kernel, the XFCE desktop,
+Syslinux/Isolinux for legacy BIOS, and GRUB for UEFI firmware.
 
 ## Current features
 
@@ -48,11 +48,11 @@ Syslinux/Isolinux boot media.
 | Desktop | XFCE, XFCE Goodies, LightDM, and a custom Raven visual theme |
 | System | Linux generic kernel, systemd, NetworkManager, PipeWire, and WirePlumber |
 | Everyday tools | Firefox, LibreOffice, VLC, GParted, OpenSSH client, Git, cURL, Wget, Vim, Nano, and htop |
-| Image | Bootable amd64 ISO-hybrid with a compressed SquashFS live filesystem |
+| Image | Reproducible amd64 ISO-hybrid with BIOS (Syslinux) and UEFI (GRUB) boot paths |
 | Updates | Ubuntu security repositories enabled in the build configuration |
 
-The complete package definition lives in
-[`config/package-lists/desktop.list.chroot`](config/package-lists/desktop.list.chroot).
+The package definitions live in [`config/package-lists/`](config/package-lists/)
+and are separated into stable base, desktop, and AI layers.
 
 ## Vision and roadmap
 
@@ -82,6 +82,7 @@ Raven-OS/
 │   ├── includes.chroot/        # Files copied into the live filesystem
 │   └── package-lists/          # Packages installed in the image
 └── scripts/
+    ├── build.sh                # Clean, deterministic build entry point
     ├── check-ubuntu-compatibility.sh # Guard Ubuntu-specific live-build settings
     ├── resume-build.sh         # Recovery helper for an interrupted build
     └── test-build.sh           # Launch the generated ISO with QEMU/KVM
@@ -105,7 +106,7 @@ On a compatible Ubuntu or Debian-based host, install the core build and test too
 
 ```bash
 sudo apt update
-sudo apt install live-build debootstrap syslinux isolinux xorriso qemu-system-x86
+sudo apt install live-build debootstrap syslinux isolinux xorriso grub-efi-amd64-bin mtools dosfstools qemu-system-x86
 ```
 
 Clone and build:
@@ -113,11 +114,15 @@ Clone and build:
 ```bash
 git clone https://github.com/kolithawarnakulasooriya/Raven-OS.git
 cd Raven-OS
-sudo lb build 2>&1 | tee raven-build.log
+sudo --preserve-env=SOURCE_DATE_EPOCH ./scripts/build.sh
 ```
 
-The configured output is `binary.hybrid.iso`. A full build downloads many packages
-and can take a while depending on the host and mirror speed.
+The configured output is `binary.hybrid.iso`, accompanied by
+`binary.hybrid.iso.sha256`. The build starts from a clean tree, fixes locale,
+timezone, permissions, and timestamps, and then assembles one hybrid image with
+both legacy BIOS and x86-64 UEFI boot entries. Set `SOURCE_DATE_EPOCH` to pin a
+release timestamp; otherwise the latest Git commit timestamp is used. A full build
+downloads many packages and can take a while depending on the host and mirror speed.
 
 > [!NOTE]
 > The configuration was generated with a legacy `live-build` configuration format.
@@ -144,10 +149,12 @@ The included test script starts the generated ISO with four virtual CPUs, 4 GB R
 and KVM acceleration:
 
 ```bash
-./scripts/test-build.sh
+./scripts/test-build.sh bios
+./scripts/test-build.sh uefi
 ```
 
-KVM must be available to your user. The equivalent command is:
+KVM must be available to your user. UEFI testing also requires OVMF (override
+its path with `OVMF_CODE`). The equivalent BIOS command is:
 
 ```bash
 qemu-system-x86_64 -enable-kvm -m 4096 -smp 4 -cdrom binary.hybrid.iso
@@ -169,6 +176,31 @@ in [`auto/config`](auto/config).
 
 Keep changes reproducible and avoid embedding credentials, private keys, tokens, or
 machine-specific configuration in an image.
+
+### Package layers
+
+Package lists are deliberately ordered by responsibility. `base.list.chroot`
+contains the kernel, live-boot, networking, and recovery foundation;
+`desktop.list.chroot` adds XFCE and applications; and `ai.list.chroot` adds the
+Ubuntu-supported data-science stack. AI dependencies must not move into or replace
+the stable base. This lets the upper layer evolve while the bootable foundation
+continues to receive ordinary Noble security updates.
+
+## Automated stability checks
+
+Run the fast checks locally before an expensive image build:
+
+```bash
+make test
+```
+
+They validate Ubuntu configuration, package-layer separation, shell syntax,
+reproducible-build controls, and both firmware boot paths. GitHub Actions runs the
+same suite plus ShellCheck for every push and pull request. These checks complement,
+rather than replace, a full ISO build and BIOS/UEFI boot test.
+
+After building, `make verify-iso` programmatically inspects the El Torito catalog
+and asserts that both firmware loaders, the kernel, and the initramfs are present.
 
 ### Preserve Ubuntu compatibility
 

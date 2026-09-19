@@ -38,4 +38,4 @@ lb config noauto \
     --iso-application "Raven OS" \
     --iso-publisher "Raven OS Project" \
     --iso-volume "Raven_NOBLE" \
-    "${@}"
+    "$@"

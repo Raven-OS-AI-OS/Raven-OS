@@ -1,0 +1,12 @@
+# Stable operating-system layer: boot, networking, audio, and recovery tools.
+ubuntu-standard
+casper
+linux-image-generic
+linux-firmware
+network-manager
+pipewire
+wireplumber
+sudo
+openssh-client
+curl
+wget
