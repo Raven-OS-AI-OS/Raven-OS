@@ -22,3 +22,6 @@
 # Logs and download leftovers
 /*.log
 /wget-log*
+
+# Locally built Debian packages
+/config/packages.chroot/*.deb

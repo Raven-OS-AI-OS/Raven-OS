@@ -2,6 +2,8 @@
 
 set -eu
 
+./scripts/build-local-packages.sh
+
 lb config noauto \
     --mode ubuntu \
     --distribution noble \
