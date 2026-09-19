@@ -3,6 +3,8 @@ set -eu
 
 # Local binary hooks run as separate processes in live-build 3.0; load the
 # generated values needed to render the menu instead of relying on exports.
+# live-build generates this extensionless shell fragment before invoking hooks.
+# shellcheck source=./config/binary
 . ./config/binary
 
 # Syslinux 6 COM32 menus require these modules beside vesamenu.c32. The old

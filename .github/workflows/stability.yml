@@ -17,4 +17,4 @@ jobs:
       - name: Run repository checks
         run: make test
       - name: Lint shell scripts
-        run: shellcheck auto/config scripts/*.sh config/hooks/* tests/*.sh
+        run: shellcheck --external-sources auto/config scripts/*.sh config/hooks/* tests/*.sh
