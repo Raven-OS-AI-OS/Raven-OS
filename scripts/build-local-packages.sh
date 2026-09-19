@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+repo_root=$(CDPATH=cd -- "$(dirname -- "$0")/.." && pwd)
 package_source="$repo_root/packages/raven-customization"
 output_dir="$repo_root/config/local-packages"
 legacy_output_dir="$repo_root/config/packages.chroot"
