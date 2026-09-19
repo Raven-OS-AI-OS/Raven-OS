@@ -82,6 +82,7 @@ Raven-OS/
 │   ├── includes.chroot/        # Files copied into the live filesystem
 │   └── package-lists/          # Packages installed in the image
 └── scripts/
+    ├── check-ubuntu-compatibility.sh # Guard Ubuntu-specific live-build settings
     ├── resume-build.sh         # Recovery helper for an interrupted build
     └── test-build.sh           # Launch the generated ISO with QEMU/KVM
 ```
@@ -168,6 +169,21 @@ in [`auto/config`](auto/config).
 
 Keep changes reproducible and avoid embedding credentials, private keys, tokens, or
 machine-specific configuration in an image.
+
+### Preserve Ubuntu compatibility
+
+The `auto/` and `config/` directories intentionally remain at the repository root:
+`live-build` discovers them there. After reorganizing files or regenerating the
+configuration, run the lightweight compatibility check before starting a full
+image build:
+
+```bash
+./scripts/check-ubuntu-compatibility.sh
+```
+
+The check verifies that both `auto/config` and the generated configuration still
+select Ubuntu Noble, Ubuntu archive components and keyrings, the generic Ubuntu
+kernel, and Casper. It does not replace an ISO build and boot test.
 
 ## Contributing
 
