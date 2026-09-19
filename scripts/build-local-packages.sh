@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+package_source="$repo_root/packages/raven-customization"
+output_dir="$repo_root/config/packages.chroot"
+temporary_dir=$(mktemp -d "${TMPDIR:-/tmp}/raven-packages.XXXXXX")
+
+cleanup() {
+    rm -rf "$temporary_dir"
+}
+trap cleanup EXIT HUP INT TERM
+
+command -v dpkg-deb >/dev/null 2>&1 || {
+    echo "error: dpkg-deb is required to build local packages" >&2
+    exit 1
+}
+
+package=$(sed -n 's/^Package: //p' "$package_source/control")
+version=$(sed -n 's/^Version: //p' "$package_source/control")
+architecture=$(sed -n 's/^Architecture: //p' "$package_source/control")
+
+[ -n "$package" ] && [ -n "$version" ] && [ -n "$architecture" ] || {
+    echo "error: incomplete package metadata in $package_source/control" >&2
+    exit 1
+}
+
+package_root="$temporary_dir/$package"
+mkdir -p "$package_root/DEBIAN" "$output_dir"
+cp -a "$package_source/rootfs/." "$package_root/"
+install -m 0644 "$package_source/control" "$package_root/DEBIAN/control"
+
+dpkg-deb --root-owner-group --build "$package_root" \
+    "$output_dir/${package}_${version}_${architecture}.deb"

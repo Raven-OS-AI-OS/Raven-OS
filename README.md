@@ -78,10 +78,13 @@ Raven-OS/
 ├── auto/config                 # Reproducible live-build configuration
 ├── config/
 │   ├── bootloaders/isolinux/   # Live boot menu and theme
-│   ├── hooks/                  # Build-time compatibility and customization hooks
-│   ├── includes.chroot/        # Files copied into the live filesystem
-│   └── package-lists/          # Packages installed in the image
+│   ├── hooks/                  # Build-time compatibility hooks
+│   ├── packages.chroot/        # Generated local packages consumed by live-build
+│   └── package-lists/          # Ubuntu packages installed in the image
+├── packages/
+│   └── raven-customization/    # Packaged Raven identity and desktop defaults
 └── scripts/
+    ├── build-local-packages.sh # Build Raven-owned Debian packages
     ├── check-ubuntu-compatibility.sh # Guard Ubuntu-specific live-build settings
     ├── resume-build.sh         # Recovery helper for an interrupted build
     └── test-build.sh           # Launch the generated ISO with QEMU/KVM
@@ -113,8 +116,12 @@ Clone and build:
 ```bash
 git clone https://github.com/kolithawarnakulasooriya/Raven-OS.git
 cd Raven-OS
+./scripts/build-local-packages.sh
 sudo lb build 2>&1 | tee raven-build.log
 ```
+
+Running `auto/config` also refreshes the local customization package before it
+regenerates the `live-build` configuration.
 
 The configured output is `binary.hybrid.iso`. A full build downloads many packages
 and can take a while depending on the host and mirror speed.
@@ -160,10 +167,12 @@ in [`auto/config`](auto/config).
 
 ## Customize the image
 
-- Add or remove packages in
+- Add or remove Ubuntu packages in
   [`config/package-lists/desktop.list.chroot`](config/package-lists/desktop.list.chroot).
-- Add files to the target filesystem under `config/includes.chroot/`.
-- Add non-interactive build customization under `config/hooks/`.
+- Add Raven-owned files under
+  [`packages/raven-customization/rootfs/`](packages/raven-customization/rootfs/),
+  update the package version, and run `./scripts/build-local-packages.sh`.
+- Add non-interactive build compatibility work under `config/hooks/`.
 - Adjust architecture, mirrors, image format, or boot options in
   [`auto/config`](auto/config), then regenerate the live-build configuration.
 

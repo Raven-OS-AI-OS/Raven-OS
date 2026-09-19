@@ -1,0 +1,11 @@
+Package: raven-customization
+Version: 0.1.0
+Section: misc
+Priority: optional
+Architecture: all
+Maintainer: Raven OS Project <maintainers@ravenlinux.org>
+Depends: base-files, lightdm-gtk-greeter, xfce4
+Replaces: base-files
+Description: Raven OS identity and desktop defaults
+ Installs the Raven OS release identity, shell defaults, desktop artwork,
+ application icons, and XFCE and LightDM defaults used by the live image.
