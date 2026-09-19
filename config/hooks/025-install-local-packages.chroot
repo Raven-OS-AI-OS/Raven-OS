@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+
+package_dir=/root/config/local-packages
+
+for package in "$package_dir"/*.deb; do
+    [ -f "$package" ] || continue
+    dpkg --install "$package"
+done

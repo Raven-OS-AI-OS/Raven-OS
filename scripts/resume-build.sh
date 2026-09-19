@@ -3,6 +3,10 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
+# Refresh local packages and migrate artifacts away from live-build's obsolete
+# GnuPG-based config/packages.chroot repository before examining build state.
+./scripts/build-local-packages.sh
+
 # A previous live-build process must not be running while state is repaired.
 if pgrep -f '/usr/lib/live/build/lb_(build|bootstrap|chroot|binary)|[ /]debootstrap ' >/dev/null 2>&1; then
     echo "A live-build/debootstrap process is still running; not changing build state." >&2

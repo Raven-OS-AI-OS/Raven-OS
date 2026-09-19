@@ -25,3 +25,5 @@
 
 # Locally built Debian packages
 /config/packages.chroot/*.deb
+/config/local-packages/*.deb
+/config/packages.chroot.*/

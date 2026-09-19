@@ -5,6 +5,7 @@ casper
 network-manager
 network-manager-gnome
 wpasupplicant
+wireplumber
 wireless-regdb
 bluez
 pipewire
