@@ -2,6 +2,8 @@
 
 set -eu
 
+./scripts/build-local-packages.sh
+
 lb config noauto \
     --mode ubuntu \
     --distribution noble \
@@ -38,4 +40,4 @@ lb config noauto \
     --iso-application "Raven OS" \
     --iso-publisher "Raven OS Project" \
     --iso-volume "Raven_NOBLE" \
-    "${@}"
+    "$@"

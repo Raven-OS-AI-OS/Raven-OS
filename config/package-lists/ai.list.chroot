@@ -1,0 +1,8 @@
+# AI/data-science layer. Keep this list independent from the bootable base so
+# framework churn can never remove kernels, Casper, networking, or recovery.
+python3-numpy
+python3-scipy
+python3-pandas
+python3-sklearn
+python3-matplotlib
+jupyter-notebook
