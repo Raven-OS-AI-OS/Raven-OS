@@ -36,6 +36,8 @@ rm -f "$output_dir/${package}_"*.deb
 # that compatibility path.
 rm -f "$legacy_output_dir/${package}_"*.deb
 cp -a "$package_source/rootfs/." "$package_root/"
+find "$package_root" -type d -exec chmod 0755 {} +
+find "$package_root" -type f -exec chmod 0644 {} +
 install -m 0644 "$package_source/control" "$package_root/DEBIAN/control"
 
 dpkg-deb --root-owner-group --build "$package_root" \
