@@ -3,6 +3,9 @@ xfce4
 xfce4-goodies
 lightdm
 lightdm-gtk-greeter
+policykit-1-gnome
+xfce4-notifyd
+network-manager-gnome
 thunar-archive-plugin
 gvfs-backends
 firefox

@@ -29,6 +29,15 @@ assert_contains config/package-lists/raven-base.list.chroot 'gnupg'
 assert_contains scripts/build-local-packages.sh 'config/local-packages'
 assert_contains config/hooks/025-install-local-packages.chroot 'dpkg --install'
 assert_contains packages/raven-customization/control 'Replaces: base-files, bash'
+assert_contains packages/raven-customization/rootfs/etc/skel/.config/xfce4/xfce-perchannel-xml/xfce4-desktop.xml '/usr/share/backgrounds/raven/background.jpg'
+assert_contains packages/raven-customization/rootfs/etc/lightdm/lightdm-gtk-greeter.conf.d/90-raven.conf 'background=/usr/share/backgrounds/raven/background.jpg'
+assert_contains config/hooks/030-customize.chroot '/usr/share/desktop-base'
+assert_contains config/hooks/030-customize.chroot "-name 'debian-*.xml'"
+assert_contains config/hooks/030-customize.chroot '/usr/share/xfce4/backdrops/xubuntu-wallpaper.png'
+assert_contains config/hooks/030-customize.chroot '/usr/sbin/lightdm'
+assert_contains packages/raven-customization/rootfs/etc/lightdm/lightdm.conf.d/90-raven-session.conf 'user-session=xubuntu'
+assert_contains config/package-lists/raven-desktop.list.chroot 'policykit-1-gnome'
+assert_contains config/package-lists/raven-desktop.list.chroot 'xfce4-notifyd'
 
 duplicates=$(sed '/^[[:space:]]*#/d;/^[[:space:]]*$/d' config/package-lists/*.list.chroot | sort | uniq -d)
 if [ -n "$duplicates" ]; then
