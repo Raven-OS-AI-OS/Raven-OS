@@ -12,7 +12,7 @@
 [![Status](https://img.shields.io/badge/status-early%20development-F5A623)](#project-status)
 [![Contributions](https://img.shields.io/badge/contributions-welcome-2EA44F)](#contributing)
 
-**Raven OS (RavenOS)** is an open-source, Ubuntu-based Linux distribution in
+**Raven OS** is an open-source, Ubuntu-based Linux distribution in
 development for AI and robotics developers. Built on **Ubuntu 24.04 LTS (Noble)**
 with the **XFCE desktop**, it aims to provide a focused workspace for machine
 learning, robot development, simulation, and edge computing.
