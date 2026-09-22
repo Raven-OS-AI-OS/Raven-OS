@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/branding/raven-logo.png" alt="Raven OS desktop artwork" width="400">
+<img src="assets/branding/raven-logo.png" alt="Raven OS logo" width="400">
 
-# Raven OS
+# Raven OS — Ubuntu-based Linux for AI and Robotics Developers
 
 ### An open-source Linux workspace for AI and robotics developers
 
@@ -12,10 +12,15 @@
 [![Status](https://img.shields.io/badge/status-early%20development-F5A623)](#project-status)
 [![Contributions](https://img.shields.io/badge/contributions-welcome-2EA44F)](#contributing)
 
-Raven OS is a community-driven, Debian-family Linux distribution being built for
-people who create intelligent machines. It aims to provide a focused desktop for
-AI experimentation, robot development, simulation, edge computing, and the tools
-that connect them.
+**Raven OS (RavenOS)** is an open-source, Ubuntu-based Linux distribution in
+development for AI and robotics developers. Built on **Ubuntu 24.04 LTS (Noble)**
+with the **XFCE desktop**, it aims to provide a focused workspace for machine
+learning, robot development, simulation, and edge computing.
+
+This is the **official Raven OS source repository**, maintained by
+[Raven-OS-AI-OS](https://github.com/Raven-OS-AI-OS).
+
+[Official repository](https://github.com/Raven-OS-AI-OS/Raven-OS) · [Raven OS website](https://raven-os-ai-os.github.io/Web/) · [Report an issue](https://github.com/Raven-OS-AI-OS/Raven-OS/issues)
 
 [About](#about) · [Features](#current-features) · [Build](#build-from-source) · [Try it](#run-in-qemu) · [Contribute](#contributing)
 
@@ -117,7 +122,7 @@ sudo apt install live-build debootstrap syslinux isolinux xorriso grub-efi-amd64
 Clone and build:
 
 ```bash
-git clone https://github.com/kolithawarnakulasooriya/Raven-OS.git
+git clone https://github.com/Raven-OS-AI-OS/Raven-OS.git
 cd Raven-OS
 
 ```
@@ -228,7 +233,7 @@ deployment to safety-critical systems, or handling sensitive data.
 
 ## License
 
-The project is uder MIT Opensource licence
+Raven OS is open-source software licensed under the MIT License.
 
 ## Acknowledgements
 
