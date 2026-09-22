@@ -45,20 +45,6 @@ The project currently produces a bootable, compressed ISO-hybrid image using
 lightweight: Ubuntu Noble packages, the Linux generic kernel, the XFCE desktop,
 Syslinux/Isolinux for legacy BIOS, and GRUB for UEFI firmware.
 
-## Current features
-
-| Area | What is included today |
-| --- | --- |
-| Base | Ubuntu 24.04 LTS (Noble), drawing from `main`, `restricted`, `universe`, and `multiverse` |
-| Desktop | XFCE, XFCE Goodies, LightDM, and a custom Raven visual theme |
-| System | Linux generic kernel, systemd, NetworkManager, PipeWire, and WirePlumber |
-| Everyday tools | Firefox, LibreOffice, VLC, GParted, OpenSSH client, Git, cURL, Wget, Vim, Nano, and htop |
-| Image | Reproducible amd64 ISO-hybrid with BIOS (Syslinux) and UEFI (GRUB) boot paths |
-| Updates | Ubuntu security repositories enabled in the build configuration |
-
-The package definitions live in [`config/package-lists/`](config/package-lists/)
-and are separated into stable base, desktop, and AI layers.
-
 ## Vision and roadmap
 
 Raven OS is intended to grow into a practical development platform with:
